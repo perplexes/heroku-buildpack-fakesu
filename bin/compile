@@ -109,7 +109,7 @@ cp $CACHE_DIR/.tools/wget/bin/wget $BUILD_DIR/bin
 if [ -f $1/.after_fakesu ]; then
   echo "------> Running after hook"
   chmod 700 $1/.after_fakesu
-  run fakechroot fakeroot chroot $BUILD_DIR/.root $1/.after_fakesu
+  run fakeroot $1/.after_fakesu
   echo "After hook ran" | indent
 fi
 
