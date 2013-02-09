@@ -1,0 +1,4 @@
+#!/bin/bash
+set -x
+rm -rf build cache && mkdir build cache
+bash -x bin/compile `pwd -P`/build `pwd -P`/cache

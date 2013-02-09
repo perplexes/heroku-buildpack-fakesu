@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
-set -e
-set -x
 
-mktmpdir() {
+mktmpdir () {
   dir=$(mktemp -t fakesu-$1-XXXX)
   rm -rf $dir
   mkdir -p $dir
   echo $dir
 }
 
-function indent() {
+indent () {
   c='s/^/       /'
   case $(uname) in
     Darwin) sed -l "$c";;
@@ -18,13 +16,30 @@ function indent() {
   esac
 }
 
+run () {
+  cmd="$*"
+  echo "Running: $cmd" >> $BUILD_LOG
+  echo "-------------" >> $BUILD_LOG
+  $($cmd >> $BUILD_LOG 2>&1)
+  if [ $? -ne 0 ]
+  then
+    echo "Error running $cmd in $(pwd -P), log appears below."
+    cat $BUILD_LOG
+    exit 1
+  fi
+  echo
+}
+
 BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
 BUILD_DIR=$1
 CACHE_DIR=$2
+BUILD_LOG="$BUILD_DIR/build.log"
+touch $BUILD_LOG
 
 WGET_BUILD="$(mktmpdir wget)"
 DEBOOTSTRAP_BUILD="$(mktmpdir debootstrap)"
-DEBOOTSTRAP_FILE="debootstrap_1.0.46.tar.gz"
+DEBOOTSTRAP_VER="debootstrap_1.0.46"
+DEBOOTSTRAP_FILE="$DEBOOTSTRAP_VER.tar.gz"
 FAKECHROOT_BUILD="$(mktmpdir fakechroot)"
 
 mkdir -p $BUILD_DIR/.tools/fakechroot
@@ -35,38 +50,38 @@ export DEBOOTSTRAP_DIR=$CACHE_DIR/.tools/debootstrap/usr/share/debootstrap
 
 echo "-----> Fetching and installing wget"
 cd $WGET_BUILD
-curl -O http://ftp.gnu.org/gnu/wget/wget-1.13.4.tar.bz2 >/dev/null 2>&1
-tar jxvf wget-1.13.4.tar.bz2 >/dev/null 2>&1
+run curl -O http://ftp.gnu.org/gnu/wget/wget-1.13.4.tar.bz2
+run tar jxvf wget-1.13.4.tar.bz2
 cd wget-1.13.4
-./configure --prefix=$CACHE_DIR/.tools/wget --without-ssl >/dev/null 2>&1
-make >/dev/null 2>&1
-make install >/dev/null 2>&1
+run ./configure --prefix=$CACHE_DIR/.tools/wget --without-ssl
+run make
+run make install
 echo "wget installed" | indent
 
 echo "-----> Fetching and installing debootstrap"
 cd $DEBOOTSTRAP_BUILD
-wget http://archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/$DEBOOTSTRAP_FILE >/dev/null 2>&1
-tar zxvf $DEBOOTSTRAP_FILE >/dev/null
-cd debootstrap
-DESTDIR=$CACHE_DIR/.tools/debootstrap fakeroot make >/dev/null
-DESTDIR=$CACHE_DIR/.tools/debootstrap fakeroot make install >/dev/null
+run wget http://archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/$DEBOOTSTRAP_FILE
+run tar zxvf $DEBOOTSTRAP_FILE
+cd debootstrap*
+DESTDIR=$CACHE_DIR/.tools/debootstrap run fakeroot make
+DESTDIR=$CACHE_DIR/.tools/debootstrap run fakeroot make install
 echo "debootstrap installed" | indent
 
 echo "-----> Fetching, installing and vendoring fakechroot into /app/.tools/fakechroot/"
 cd $FAKECHROOT_BUILD
-git clone git://github.com/fabiokung/fakechroot.git >/dev/null
+run git clone git://github.com/fabiokung/fakechroot.git
 cd fakechroot
-./autogen.sh >/dev/null 2>&1
-./configure --prefix=$BUILD_DIR/.tools/fakechroot >/dev/null
-make >/dev/null
-make install >/dev/null
+run ./autogen.sh
+run ./configure --prefix=$BUILD_DIR/.tools/fakechroot
+run make
+run make install
 echo "fakechroot vendored" | indent
 
 cd $BUILDPACK_DIR
 echo "-----> Bootstraping a new base ubuntu lucid into /app/.root/"
 mkdir -p $BUILD_DIR/.root
-fakechroot -s fakeroot debootstrap --no-check-gpg --variant=fakechroot lucid $BUILD_DIR/.root >/dev/null
-fakechroot fakeroot chroot $BUILD_DIR/.root apt-get install -y --force-yes gpgv >/dev/null 2>&1
+run fakechroot -s fakeroot debootstrap --no-check-gpg --variant=fakechroot lucid $BUILD_DIR/.root
+run fakechroot fakeroot chroot $BUILD_DIR/.root apt-get install -y --force-yes gpgv
 echo "/app/.root bootstraped" | indent
 
 sed -i -e "s/#force_color_prompt=yes/force_color_prompt=yes/" $BUILD_DIR/.root/root/.bashrc
@@ -79,7 +94,7 @@ deb http://archive.ubuntu.com/ubuntu lucid main universe
 deb http://archive.ubuntu.com/ubuntu lucid-security main
 deb http://archive.ubuntu.com/ubuntu lucid-updates main
 EOF"
-fakechroot fakeroot chroot $BUILD_DIR/.root apt-get update >/dev/null
+run fakechroot fakeroot chroot $BUILD_DIR/.root apt-get update
 echo "packages updated" | indent
 
 cd $BUILD_DIR/.root
