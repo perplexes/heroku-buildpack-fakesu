@@ -103,6 +103,8 @@ ln -s ../ app
 mkdir -p $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/fakesu $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/aws $BUILD_DIR/bin
+cp $BUILDPACK_DIR/bin/sudo $BUILD_DIR/bin
+cp $CACHE_DIR/.tools/wget/bin/wget $BUILD_DIR/bin
 
 exit 0
 
