@@ -95,7 +95,7 @@ deb http://archive.ubuntu.com/ubuntu lucid-security main
 deb http://archive.ubuntu.com/ubuntu lucid-updates main
 EOF"
 run fakechroot fakeroot chroot $BUILD_DIR/.root apt-get update
-echo "packages updated" | indent
+echo "Packages updated" | indent
 
 cd $BUILD_DIR/.root
 ln -s ../ app
@@ -105,6 +105,12 @@ cp $BUILDPACK_DIR/bin/fakesu $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/aws $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/sudo $BUILD_DIR/bin
 cp $CACHE_DIR/.tools/wget/bin/wget $BUILD_DIR/bin
+
+if [ -f $1/.after_fakesu ]; then
+  echo "------> Running after hook"
+  run $1/.after_fakesu
+  echo "After hook ran" | indent
+fi
 
 exit 0
 
