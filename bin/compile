@@ -20,7 +20,7 @@ run () {
   cmd="$*"
   echo "Running: $cmd" >> $BUILD_LOG
   echo "-------------" >> $BUILD_LOG
-  $($cmd >> $BUILD_LOG 2>&1)
+  $cmd >> $BUILD_LOG 2>&1
   if [ $? -ne 0 ]
   then
     echo "Error running $cmd in $(pwd -P), log appears below."
