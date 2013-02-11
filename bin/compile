@@ -92,8 +92,6 @@ else
   echo "Installed" | indent
 fi
 run cp -R -v $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
-run find $CACHE_DIR/.tools/fakechroot
-run find $BUILD_DIR/.tools/fakechroot
 
 cd $BUILDPACK_DIR
 
@@ -112,16 +110,12 @@ else
   echo "cd $HOME" >> $CACHE_DIR/.root/root/.bashrc
 
   echo "-----> Updating packages"
-  fakechroot fakeroot chroot $CACHE_DIR/.root bash -c "cat > /etc/apt/sources.list <<EOF
-  deb http://archive.ubuntu.com/ubuntu lucid main universe
-  deb http://archive.ubuntu.com/ubuntu lucid-security main
-  deb http://archive.ubuntu.com/ubuntu lucid-updates main
-  EOF"
+  cp $BUILDPACK_DIR/sources.list $CACHE_DIR/.root/etc/apt/sources.list
   run fakechroot fakeroot chroot $CACHE_DIR/.root apt-get update
   touch "$CACHE_DIR/.root/root/done"
   echo "Packages updated" | indent
 fi
-cp -R $CACHE_DIR/.root $BUILD_DIR/
+run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
 
 cd $BUILD_DIR/.root
 ln -s ../ app
