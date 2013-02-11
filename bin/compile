@@ -90,7 +90,8 @@ else
   run make install
   echo "Installed" | indent
 fi
-cp -R $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
+cp -v -R $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
+find $CACHE_DIR/.tools/fakechroot
 find $BUILD_DIR/.tools/fakechroot
 
 cd $BUILDPACK_DIR
