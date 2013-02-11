@@ -91,6 +91,7 @@ else
   echo "Installed" | indent
 fi
 cp -R $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
+find $BUILD_DIR/.tools/fakechroot
 
 cd $BUILDPACK_DIR
 
