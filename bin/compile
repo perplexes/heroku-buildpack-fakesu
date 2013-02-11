@@ -48,7 +48,7 @@ export PATH=/sbin:/usr/sbin:$PATH:$CACHE_DIR/.tools/wget/bin:$CACHE_DIR/.tools/d
 export DEBOOTSTRAP_DIR=$CACHE_DIR/.tools/debootstrap/usr/share/debootstrap
 
 echo "-----> Fetching and installing wget"
-if [ -d $CACHE_DIR/.tools/wget ]
+if [ -d $CACHE_DIR/.tools/wget/bin ]
 then
   echo "Cached" | indent
 else
@@ -63,7 +63,7 @@ else
 fi
 
 echo "-----> Fetching and installing debootstrap"
-if [ -d $CACHE_DIR/.tools/debootstrap ]
+if [ -d $CACHE_DIR/.tools/debootstrap/usr/sbin ]
 then
   echo "Cached" | indent
 else
@@ -91,11 +91,13 @@ else
   echo "Installed" | indent
 fi
 cp -R $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
+find $CACHE_DIR/.tools/fakechroot
+find $BUILD_DIR/.tools/fakechroot
 
 cd $BUILDPACK_DIR
 
 echo "-----> Bootstraping a new base ubuntu lucid into /app/.root/"
-if [ -d $CACHE_DIR/.root ]
+if [ -f "$CACHE_DIR/.root/root/done" ]
 then
   echo "Cached" | indent
 else
@@ -115,6 +117,7 @@ else
   deb http://archive.ubuntu.com/ubuntu lucid-updates main
   EOF"
   run fakechroot fakeroot chroot $CACHE_DIR/.root apt-get update
+  touch "$CACHE_DIR/.root/root/done"
   echo "Packages updated" | indent
 fi
 cp -R $CACHE_DIR/.root $BUILD_DIR/
