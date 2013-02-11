@@ -77,7 +77,7 @@ else
 fi
 
 echo "-----> Fetching, installing and vendoring fakechroot into /app/.tools/fakechroot"
-if [ -d $CACHE_DIR/.tools/fakechroot ]
+if [ -d $CACHE_DIR/.tools/fakechroot/sbin ]
 then
   echo "Cached" | indent
 else
@@ -90,9 +90,7 @@ else
   run make install
   echo "Installed" | indent
 fi
-cp -v -R $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
-find $CACHE_DIR/.tools/fakechroot
-find $BUILD_DIR/.tools/fakechroot
+cp -R $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
 
 cd $BUILDPACK_DIR
 
