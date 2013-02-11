@@ -18,16 +18,16 @@ indent () {
 
 run () {
   cmd="$*"
-  echo "Running: $cmd" | tee $BUILD_LOG
-  echo "-------------" | tee $BUILD_LOG
-  $cmd 2>&1 | tee $BUILD_LOG
+  echo "Running: $cmd" >> $BUILD_LOG
+  echo "-------------" >> $BUILD_LOG
+  $cmd >> $BUILD_LOG 2>&1
   if [ $? -ne 0 ]
   then
     echo "Error running $cmd in $(pwd -P), log appears below."
     cat $BUILD_LOG
     exit 1
   fi
-  echo | tee $BUILD_LOG
+  echo >> $BUILD_LOG
 }
 
 BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
