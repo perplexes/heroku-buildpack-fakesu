@@ -127,7 +127,7 @@ cp $BUILDPACK_DIR/bin/sudo $BUILD_DIR/bin
 cp $CACHE_DIR/.tools/wget/bin/wget $BUILD_DIR/bin
 
 if [ -f $1/.after_fakesu ]; then
-  echo "------> Running after hook"
+  echo "-----> Running after hook"
   chmod 700 $1/.after_fakesu
   run $1/.after_fakesu $BUILD_DIR $CACHE_DIR
   echo "After hook ran" | indent
