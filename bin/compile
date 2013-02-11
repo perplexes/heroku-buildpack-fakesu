@@ -43,6 +43,7 @@ DEBOOTSTRAP_FILE="$DEBOOTSTRAP_VER.tar.gz"
 FAKECHROOT_BUILD="$(mktmpdir fakechroot)"
 
 mkdir -p $CACHE_DIR/.tools/{wget,debootstrap,fakechroot}
+mkdir -p $BUILD_DIR/.tools
 
 export PATH=/sbin:/usr/sbin:$PATH:$CACHE_DIR/.tools/wget/bin:$CACHE_DIR/.tools/debootstrap/usr/sbin:$BUILD_DIR/.tools/fakechroot/sbin:$BUILD_DIR/.tools/fakechroot/bin
 export DEBOOTSTRAP_DIR=$CACHE_DIR/.tools/debootstrap/usr/share/debootstrap
@@ -90,9 +91,9 @@ else
   run make install
   echo "Installed" | indent
 fi
-cp -R $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
-find $CACHE_DIR/.tools/fakechroot
-find $BUILD_DIR/.tools/fakechroot
+run cp -R -v $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
+run find $CACHE_DIR/.tools/fakechroot
+run find $BUILD_DIR/.tools/fakechroot
 
 cd $BUILDPACK_DIR
 
