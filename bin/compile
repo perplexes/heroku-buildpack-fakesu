@@ -129,14 +129,14 @@ cp $BUILDPACK_DIR/bin/aws $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/sudo $BUILD_DIR/bin
 cp $CACHE_DIR/.tools/wget/bin/wget $BUILD_DIR/bin
 
-if [ -f $1/.after_fakesu ]; then
-  md5=$(md5sum $1/.after_fakesu | cut -f1 -d' ')
+after_compile=$1/.fakesu/after_compile
+if [ -f $after_compile ]; then
+  md5=$(md5sum $after_compile | cut -f1 -d' ')
   if [ -f $1/.root/root/after_hook_$md5 ]; then
     echo "Cached" | indent
   else
     echo "-----> Running after hook"
-    chmod 700 $1/.after_fakesu
-    source $1/.after_fakesu
+    source $after_compile
     touch $1/.root/root/after_hook_$md5
     echo "After hook ran" | indent
   fi
