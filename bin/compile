@@ -118,6 +118,7 @@ else
 fi
 
 cd $CACHE_DIR/.root
+rm app || true
 ln -s $BUILD_DIR app
 
 after_compile="$BUILD_DIR/.fakesu/after_compile"
