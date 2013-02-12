@@ -117,11 +117,11 @@ else
   echo "Packages updated" | indent
 fi
 
-after_compile="$CACHE_DIR/.fakesu/after_compile"
+after_compile="$BUILD_DIR/.fakesu/after_compile"
 if [ -f $after_compile ]; then
   md5=$(md5sum $after_compile | cut -f1 -d' ')
   if [ -f $CACHE_DIR/.root/root/after_hook_$md5 ]; then
-    echo "Cached" | indent
+    echo "After Compile Cached" | indent
   else
     echo "-----> Running after hook ($after_compile)"
     source $after_compile
