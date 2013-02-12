@@ -117,6 +117,9 @@ else
   echo "Packages updated" | indent
 fi
 
+cd $CACHE_DIR/.root
+ln -s $BUILD_DIR app
+
 after_compile="$BUILD_DIR/.fakesu/after_compile"
 if [ -f $after_compile ]; then
   md5=$(md5sum $after_compile | cut -f1 -d' ')
@@ -133,7 +136,7 @@ fi
 run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
 
 cd $BUILD_DIR/.root
-ln -s ../ app
+ln -sf ../ app
 
 mkdir -p $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/fakesu $BUILD_DIR/bin
