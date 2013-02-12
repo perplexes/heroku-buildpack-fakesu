@@ -116,6 +116,20 @@ else
   touch "$CACHE_DIR/.root/root/done"
   echo "Packages updated" | indent
 fi
+
+after_compile="$CACHE_DIR/.fakesu/after_compile"
+if [ -f $after_compile ]; then
+  md5=$(md5sum $after_compile | cut -f1 -d' ')
+  if [ -f $CACHE_DIR/.root/root/after_hook_$md5 ]; then
+    echo "Cached" | indent
+  else
+    echo "-----> Running after hook ($after_compile)"
+    source $after_compile
+    touch $CACHE_DIR/.root/root/after_hook_$md5
+    echo "After hook ran" | indent
+  fi
+fi
+
 run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
 
 cd $BUILD_DIR/.root
@@ -126,19 +140,6 @@ cp $BUILDPACK_DIR/bin/fakesu $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/aws $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/sudo $BUILD_DIR/bin
 cp $CACHE_DIR/.tools/wget/bin/wget $BUILD_DIR/bin
-
-after_compile=$1/.fakesu/after_compile
-if [ -f $after_compile ]; then
-  md5=$(md5sum $after_compile | cut -f1 -d' ')
-  if [ -f $1/.root/root/after_hook_$md5 ]; then
-    echo "Cached" | indent
-  else
-    echo "-----> Running after hook ($after_compile)"
-    source $after_compile
-    touch $1/.root/root/after_hook_$md5
-    echo "After hook ran" | indent
-  fi
-fi
 
 exit 0
 
