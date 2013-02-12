@@ -136,7 +136,8 @@ fi
 run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
 
 cd $BUILD_DIR/.root
-ln -sf ../ app
+rm app
+ln -s ../ app
 
 mkdir -p $BUILD_DIR/bin
 cp $BUILDPACK_DIR/bin/fakesu $BUILD_DIR/bin
