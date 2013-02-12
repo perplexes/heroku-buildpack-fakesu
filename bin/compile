@@ -63,15 +63,16 @@ else
   echo "Installed" | indent
 fi
 
-echo "-----> Fetching and installing debootstrap"
-if [ -d $CACHE_DIR/.tools/debootstrap/usr/sbin ]
+echo "-----> Fetching and installing, and patching debootstrap"
+if [ -d $CACHE_DIR/.tools/debootstrap/usr/sbin && ! $FORCE_DEBOOTSTRAP = "" ]
 then
   echo "Cached" | indent
 else
   cd $DEBOOTSTRAP_BUILD
-  run wget http://archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/$DEBOOTSTRAP_FILE
+  run wget http://us-east-1.ec2.archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/$DEBOOTSTRAP_FILE
   run tar zxvf $DEBOOTSTRAP_FILE
   cd debootstrap*
+  patch -p1 < $BUILDPACK_DIR/ec2_archive.patch
   DESTDIR=$CACHE_DIR/.tools/debootstrap run fakeroot make
   DESTDIR=$CACHE_DIR/.tools/debootstrap run fakeroot make install
   echo "Installed" | indent
