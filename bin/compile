@@ -65,7 +65,7 @@ fi
 
 echo "-----> Fetching and installing, and patching debootstrap"
 export
-if [[ -d $CACHE_DIR/.tools/debootstrap/usr/sbin && "$FORCE_DEBOOTSTRAP" == "" ]]
+if [[ -d $CACHE_DIR/.tools/debootstrap/usr/sbin && ! -f $BUILD_DIR/.force_debootstrap ]]
 then
   echo "Cached" | indent
 else
