@@ -95,7 +95,7 @@ run cp -R -v $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
 
 cd $BUILDPACK_DIR
 
-echo "-----> Bootstraping a new base ubuntu lucid into /app/.root/"
+echo "-----> Bootstrapping a new base ubuntu lucid into /app/.root/"
 if [ -f "$CACHE_DIR/.root/root/done" ]
 then
   echo "Cached" | indent
@@ -103,7 +103,7 @@ else
   mkdir -p $CACHE_DIR/.root
   run fakechroot -s fakeroot debootstrap --no-check-gpg --variant=fakechroot lucid $CACHE_DIR/.root
   run fakechroot fakeroot chroot $CACHE_DIR/.root apt-get install -y --force-yes gpgv
-  echo "/app/.root bootstraped" | indent
+  echo "/app/.root bootstrapped" | indent
 
   sed -i -e "s/#force_color_prompt=yes/force_color_prompt=yes/" $CACHE_DIR/.root/root/.bashrc
   echo "export PATH=/sbin:/usr/sbin:\$PATH" >> $CACHE_DIR/.root/root/.bashrc
