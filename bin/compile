@@ -135,6 +135,7 @@ if [ -f $after_compile ]; then
 fi
 
 run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
+rm -rf $BUILD_DIR/.root/var/cache/apt $BUILD_DIR/.root/usr/share/doc $BUILD_DIR/.root/var/lib/apt/lists
 
 cd $BUILD_DIR/.root
 rm app
