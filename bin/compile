@@ -93,7 +93,6 @@ else
   echo "Installed" | indent
 fi
 run cp -R -v $CACHE_DIR/.tools/fakechroot $BUILD_DIR/.tools/
-echo "Size: $(du -h $BUILD_DIR/.tools/fakechroot | tail -n 1)"
 
 cd $BUILDPACK_DIR
 
@@ -118,7 +117,6 @@ else
   echo "Packages updated" | indent
 fi
 run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
-echo "Size: $(du -h $BUILD_DIR/.root | tail -n 1)"
 
 cd $BUILD_DIR/.root
 ln -s ../ app
@@ -135,7 +133,7 @@ if [ -f $after_compile ]; then
   if [ -f $1/.root/root/after_hook_$md5 ]; then
     echo "Cached" | indent
   else
-    echo "-----> Running after hook"
+    echo "-----> Running after hook ($after_compile)"
     source $after_compile
     touch $1/.root/root/after_hook_$md5
     echo "After hook ran" | indent
