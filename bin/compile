@@ -64,6 +64,8 @@ else
 fi
 
 echo "-----> Fetching and installing, and patching debootstrap"
+ls $BUILD_DIR/.force_debootstrap
+[[ ! -f $BUILD_DIR/.force_debootstrap ]] && echo "There's no .force_debootstrap"
 if [[ -d $CACHE_DIR/.tools/debootstrap/usr/sbin && ! -f $BUILD_DIR/.force_debootstrap ]]
 then
   echo "Cached" | indent
