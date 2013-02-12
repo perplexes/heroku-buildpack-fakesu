@@ -63,7 +63,7 @@ else
   echo "Installed" | indent
 fi
 
-echo "-----> Fetching and installing, and patching debootstrap"
+echo "-----> Fetching, installing, and patching debootstrap"
 if [[ -d $CACHE_DIR/.tools/debootstrap/usr/sbin && ! -f $BUILD_DIR/.force_debootstrap ]]
 then
   echo "Cached" | indent
