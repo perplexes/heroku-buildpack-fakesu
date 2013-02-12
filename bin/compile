@@ -130,14 +130,17 @@ cp $BUILDPACK_DIR/bin/sudo $BUILD_DIR/bin
 cp $CACHE_DIR/.tools/wget/bin/wget $BUILD_DIR/bin
 
 if [ -f $1/.after_fakesu ]; then
-  echo "-----> Running after hook"
-  chmod 700 $1/.after_fakesu
-  source $1/.after_fakesu
-  echo "After hook ran" | indent
+  md5=$(md5sum $1/.after_fakesu | cut -f1 -d' ')
+  if [ -f $1/.root/root/after_hook_$md5 ]; then
+    echo "Cached" | indent
+  else
+    echo "-----> Running after hook"
+    chmod 700 $1/.after_fakesu
+    source $1/.after_fakesu
+    touch $1/.root/root/after_hook_$md5
+    echo "After hook ran" | indent
+  fi
 fi
-
-echo "Size: $(du -h $BUILD_DIR/.root | tail -n 1)"
-echo "Total size: $(du -h $BUILD_DIR | tail -n 1)"
 
 exit 0
 
