@@ -54,7 +54,7 @@ then
   echo "Cached" | indent
 else
   cd $WGET_BUILD
-  run curl -O http://ftp.gnu.org/gnu/wget/wget-1.13.4.tar.bz2
+  run curl -O https://s3.amazonaws.com/heroku-buildpack-fakesu/wget-1.13.4.tar.bz2
   run tar jxvf wget-1.13.4.tar.bz2
   cd wget-1.13.4
   run ./configure --prefix=$CACHE_DIR/.tools/wget --without-ssl
