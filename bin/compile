@@ -48,6 +48,10 @@ mkdir -p $BUILD_DIR/.tools
 export PATH=/sbin:/usr/sbin:$PATH:$CACHE_DIR/.tools/wget/bin:$CACHE_DIR/.tools/debootstrap/usr/sbin:$BUILD_DIR/.tools/fakechroot/sbin:$BUILD_DIR/.tools/fakechroot/bin
 export DEBOOTSTRAP_DIR=$CACHE_DIR/.tools/debootstrap/usr/share/debootstrap
 
+if [ -f $BUILD_DIR/.fakesu/before_compile ]; then
+  source $BUILD_DIR/.fakesu/before_compile
+fi
+
 echo "-----> Fetching and installing wget"
 if [ -d $CACHE_DIR/.tools/wget/bin ]
 then
