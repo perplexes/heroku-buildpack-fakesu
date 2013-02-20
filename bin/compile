@@ -126,18 +126,14 @@ ln -s $BUILD_DIR app
 
 after_compile="$BUILD_DIR/.fakesu/after_compile"
 if [ -f $after_compile ]; then
-  md5=$(md5sum $after_compile | cut -f1 -d' ')
-  if [ -f $CACHE_DIR/.root/root/after_hook_$md5 ]; then
-    echo "After Compile Cached" | indent
-  else
-    echo "-----> Running after hook ($after_compile)"
-    source $after_compile
-    touch $CACHE_DIR/.root/root/after_hook_$md5
-    echo "After hook ran" | indent
-  fi
+  echo "-----> Running after hook ($after_compile)"
+  source $after_compile
+  echo "After hook ran" | indent
 fi
 
 run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
+
+# Free up some space in the slug.
 rm -rf $BUILD_DIR/.root/var/cache/apt $BUILD_DIR/.root/usr/share/doc $BUILD_DIR/.root/var/lib/apt/lists
 
 cd $BUILD_DIR/.root
