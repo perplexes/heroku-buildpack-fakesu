@@ -135,9 +135,11 @@ if [ -f $after_compile ]; then
   echo "After hook ran" | indent
 fi
 
+echo "-----> Copying the fake root."
 run cp -R -v $CACHE_DIR/.root $BUILD_DIR/
 
 # Free up some space in the slug.
+echo "-----> Freeing some space."
 rm -rf $BUILD_DIR/.root/var/cache/apt $BUILD_DIR/.root/usr/share/doc $BUILD_DIR/.root/var/lib/apt/lists
 
 cd $BUILD_DIR/.root
